@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    Picard (0.0.1)
+    picard (0.0.2)
       live_ast (= 1.0.2)
       live_ast_ripper (= 0.6.5)
 
@@ -26,5 +26,5 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  Picard!
+  picard!
   rr
