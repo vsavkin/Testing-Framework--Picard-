@@ -1,7 +1,3 @@
-gem 'live_ast'
-gem 'live_ast_ripper'
+source "http://rubygems.org"
 
-group :test do
-  gem 'rr'
-  gem 'guard-test'
-end
+gemspec
