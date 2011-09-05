@@ -1,6 +1,8 @@
 require_relative '../test_helper'
 
 class Picard::AstHelperTest < Test::Unit::TestCase
+  include Picard::TestUnit
+
   class TestClass
     def test_method
       x = 10
@@ -35,61 +37,74 @@ class Picard::AstHelperTest < Test::Unit::TestCase
   end
 
   def test_should_return_all_statements_of_method
-    method = TestClass.instance_method(:test_method)
-    actual = @helper.all_statements(method)
-    
-    assert_equal 0, actual[0].index
-    assert_equal s(:lasgn, :x, s(:lit, 10)), actual[0].ast
+    given
+      method = TestClass.instance_method(:test_method)
+      actual = @helper.all_statements(method)
 
-    assert_equal 1, actual[1].index
-    assert_equal s(:call, nil, :expect, s(:arglist)), actual[1].ast
+    expect
+      actual[0].index == 0
+      actual[0].ast == s(:lasgn, :x, s(:lit, 10))
 
-    assert_equal 2, actual[2].index
-    assert_equal s(:call, s(:lvar, :x), :==, s(:arglist, s(:lit, 10))), actual[2].ast
+      actual[1].index == 1
+      s(:call, nil, :expect, s(:arglist)) == actual[1].ast
+  
+      actual[2].index == 2
+      actual[2].ast == s(:call, s(:lvar, :x), :==, s(:arglist, s(:lit, 10)))
 
-    assert_equal 3, actual[3].index
-    assert_equal s(:call, s(:lvar, :x), :==, s(:arglist, s(:lit, 12))), actual[3].ast
+      actual[3].index == 3
+      actual[3].ast == s(:call, s(:lvar, :x), :==, s(:arglist, s(:lit, 12)))
   end
 
   def test_should_find_all_statements_in_specified_block
-    method = TestClass.instance_method(:test_method)
-    all_statements = @helper.all_statements(method)
-    actual = @helper.find_all_statements_in_block(all_statements, :expect)
+    given
+      method = TestClass.instance_method(:test_method)
+      all_statements = @helper.all_statements(method)
+      actual = @helper.find_all_statements_in_block(all_statements, :expect)
 
-    assert_equal 2, actual.size
+    expect
+      actual.size == 2
 
-    assert_equal 2, actual[0].index
-    assert_equal s(:call, s(:lvar, :x), :==, s(:arglist, s(:lit, 10))), actual[0].ast
+      actual[0].index == 2
+      actual[0].ast == s(:call, s(:lvar, :x), :==, s(:arglist, s(:lit, 10)))
 
-    assert_equal 3, actual[1].index
-    assert_equal s(:call, s(:lvar, :x), :==, s(:arglist, s(:lit, 12))), actual[1].ast
+      actual[1].index == 3
+      actual[1].ast == s(:call, s(:lvar, :x), :==, s(:arglist, s(:lit, 12)))
   end
 
   def test_should_return_empty_array_if_specified_method_call_was_not_found
-    method = TestClass.instance_method(:method_without_assertions)
-    all_statements = @helper.all_statements(method)
-    actual = @helper.find_all_statements_in_block(all_statements, :expect)
-    assert_equal [], actual
+    given
+      method = TestClass.instance_method(:method_without_assertions)
+      all_statements = @helper.all_statements(method)
+
+    expect
+      @helper.find_all_statements_in_block(all_statements, :expect) == []
   end
 
   def test_should_wrap_assertion
-    result = @helper.wrap_assertion(s(:lit, true))
-    assert_equal s(:call, nil, :assert, s(:arglist, s(:lit, true))), result
+    given
+      result = @helper.wrap_assertion(s(:lit, true))
+
+    expect
+      result == s(:call, nil, :assert, s(:arglist, s(:lit, true)))
   end
 
   def test_should_replace_statement
-    method = TestClass.instance_method(:test_method_to_replace_statements)
-    @helper.replace_statement(method, 0, s(:lit, true))
-    
-    all_statements = @helper.all_statements(method)
-    assert_equal s(:lit, true), all_statements[0].ast
+    given
+      method = TestClass.instance_method(:test_method_to_replace_statements)
+      @helper.replace_statement(method, 0, s(:lit, true))
+      all_statements = @helper.all_statements(method)
+
+    expect
+      all_statements[0].ast == s(:lit, true)
   end
 
   def test_should_return_list_of_all_local_variables_defined_after_specified_method_call
-    method = TestClass.instance_method(:test_method_with_where_block)
-    all_statements = @helper.all_statements(method)
-    actual = @helper.find_all_local_variables_in_block(all_statements, :where)
-    assert_equal [:y, :z], actual
+    given
+      method = TestClass.instance_method(:test_method_with_where_block)
+      all_statements = @helper.all_statements(method)
+
+    expect
+      @helper.find_all_local_variables_in_block(all_statements, :where) == [:y, :z]
   end
 
   private

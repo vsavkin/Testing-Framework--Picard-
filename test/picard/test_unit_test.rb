@@ -1,6 +1,8 @@
 require_relative '../test_helper'
 
 class Picard::TestUnitTest < Test::Unit::TestCase
+  include Picard::TestUnit
+  
   class TestUsingPicard
     include Picard::TestUnit
     attr_reader :assert_args
@@ -20,8 +22,11 @@ class Picard::TestUnitTest < Test::Unit::TestCase
   end
 
   def test_should_add_assertions_to_all_test_methods
-    test = TestUsingPicard.new
-    test.test_method
-    assert_equal [false], test.assert_args
+    given
+      test = TestUsingPicard.new
+      test.test_method
+
+    expect
+      test.assert_args == [false]
   end
 end

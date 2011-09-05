@@ -1,6 +1,7 @@
 require_relative '../test_helper'
 
 class Picard::PreprocessorTest < Test::Unit::TestCase
+  include Picard::TestUnit
   include RR::Adapters::RRMethods
 
   class BaseTestClass
@@ -24,6 +25,10 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
     end
   end
 
+  def setup
+    @pr = Picard::Preprocessor.new
+  end
+
   # We need to use a class per test for test isolation
   class TestClass < BaseTestClass
     def test_method
@@ -33,12 +38,13 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
   end
 
   def test_should_wrap_all_assertions_after_expect_in_all_test_methods
-    tr = Picard::Preprocessor.new
-    tr.preprocess_class(TestClass)
+    given
+      @pr.preprocess_class(TestClass)
+      tc = TestClass.new
+      tc.test_method
 
-    tc = TestClass.new
-    tc.test_method
-    assert_equal [false], tc.assert_args
+    expect
+      tc.assert_args == [false]
   end
 
 
@@ -50,12 +56,13 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
   end
 
   def test_should_wrap_all_assertions_in_specified_method
-    tr = Picard::Preprocessor.new
-    tr.preprocess_method(TestClass2, :test_method)
+    given
+      @pr.preprocess_method(TestClass2, :test_method)
+      tc = TestClass2.new
+      tc.test_method
 
-    tc = TestClass2.new
-    tc.test_method
-    assert_equal [false], tc.assert_args
+    expect
+      tc.assert_args == [false]
   end
 
   
@@ -67,13 +74,15 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
   end
 
   def test_should_not_preprocess_the_same_method_twice
-    tr = Picard::Preprocessor.new
-    tr.preprocess_method(TestClass3, :test_method)
-    tr.preprocess_method(TestClass3, :test_method)
+    given
+      @pr.preprocess_method(TestClass3, :test_method)
+      @pr.preprocess_method(TestClass3, :test_method)
 
-    tc = TestClass3.new
-    tc.test_method
-    assert_equal [false], tc.assert_args
+      tc = TestClass3.new
+      tc.test_method
+
+    expect
+      tc.assert_args == [false]
   end
 
 
@@ -84,12 +93,13 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
   end
 
   def test_should_ignore_non_test_methods
-    tr = Picard::Preprocessor.new
-    tr.preprocess_method(TestClass4, :regular_method)
+    given
+      @pr.preprocess_method(TestClass4, :regular_method)
+      tc = TestClass4.new
+      tc.regular_method
 
-    tc = TestClass4.new
-    tc.regular_method
-    assert_equal [], tc.assert_args
+    expect
+      tc.assert_args == []
   end
 
 

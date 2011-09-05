@@ -14,8 +14,8 @@ module Picard
     def find_all_statements_in_block items, block_name
       start_index = find_index_of_statements_calling(items, block_name)
       end_index = find_index_of_statements_calling(items, :where)
-      end_index = -1 unless end_index
-      start_index ? items[start_index + 1 ... end_index] : []
+      end_index = end_index ? end_index - 1 : -1
+      start_index ? items[start_index + 1 .. end_index] : []
     end
 
     def wrap_assertion ast

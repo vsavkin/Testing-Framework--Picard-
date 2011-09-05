@@ -1,6 +1,8 @@
 require_relative '../test_helper'
 
 class Picard::MethodRipperTest < Test::Unit::TestCase
+  include Picard::TestUnit
+  
   class TestClass
     def test_method
       given
@@ -21,14 +23,20 @@ class Picard::MethodRipperTest < Test::Unit::TestCase
   end
 
   def test_should_wrap_all_assertions_after_expect_method_call
-    method = TestClass.instance_method(:test_method)
-    new_method_str = @ripper.wrap_all_assertions(method)
-    assert_equal "def test_method\ngiven\nsomething\nexpect\nassert((1 == 1))\nassert((2 == 2))\nend", new_method_str
+    given
+      method = TestClass.instance_method(:test_method)
+      expected_after_processing = "def test_method\ngiven\nsomething\nexpect\nassert((1 == 1))\nassert((2 == 2))\nend"
+
+    expect
+      @ripper.wrap_all_assertions(method) == expected_after_processing
   end
 
   def test_should_return_existing_implementation_if_there_was_no_expect_method_call
-    method = TestClass.instance_method(:regular_method)
-    new_method_str = @ripper.wrap_all_assertions(method)
-    assert_equal "def regular_method\n(1 == 1)\n(2 == 2)\nend", new_method_str
+    given
+      method = TestClass.instance_method(:regular_method)
+      expected_after_processing = "def regular_method\n(1 == 1)\n(2 == 2)\nend"
+
+    expect
+      @ripper.wrap_all_assertions(method) == expected_after_processing
   end
 end
