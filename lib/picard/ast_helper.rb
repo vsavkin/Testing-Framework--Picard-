@@ -19,8 +19,7 @@ module Picard
     end
 
     def wrap_assertion ast
-      copy = Sexp.from_array(ast.to_a)
-      error_message = 'Failed: ' + Ruby2Ruby.new.process(copy)
+      error_message = generate_error_message(ast)
       Sexp.new(:call, nil,
                :assert,
                Sexp.new(:arglist, ast),
@@ -47,8 +46,18 @@ module Picard
       end
     end
 
+    def ast_to_str ast
+      Ruby2Ruby.new.process ast
+    end
+
     private
-    def find_index_of_statements_calling(items, method_name)
+
+    def generate_error_message ast
+      copy = Sexp.from_array(ast.to_a)
+      'Failed: ' + ast_to_str(copy)
+    end
+
+    def find_index_of_statements_calling items, method_name
       items.index do |item|
         ast = item.ast
         ast[0] == :call and ast[2] == method_name

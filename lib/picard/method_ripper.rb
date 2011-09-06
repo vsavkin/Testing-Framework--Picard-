@@ -1,6 +1,5 @@
 require 'live_ast'
 require 'live_ast/to_ruby'
-require 'ruby2ruby'
 
 module Picard
   class MethodRipper
@@ -25,8 +24,7 @@ module Picard
     end
 
     def ast_to_str ast
-      str = Ruby2Ruby.new.process(ast)
-      remove_spaces str
+      remove_spaces @ast_helper.ast_to_str(ast)
     end
 
     def remove_spaces str
