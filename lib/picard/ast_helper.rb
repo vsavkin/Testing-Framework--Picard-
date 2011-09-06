@@ -19,7 +19,12 @@ module Picard
     end
 
     def wrap_assertion ast
-      Sexp.new(:call, nil, :assert, Sexp.new(:arglist, ast))
+      copy = Sexp.from_array(ast.to_a)
+      error_message = 'Failed: ' + Ruby2Ruby.new.process(copy)
+      Sexp.new(:call, nil,
+               :assert,
+               Sexp.new(:arglist, ast),
+               Sexp.new(:str, error_message))
     end
 
     def replace_statement method, index, new_ast

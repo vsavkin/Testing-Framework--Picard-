@@ -1,4 +1,4 @@
-require_relative '../test_helper'
+require File.expand_path("../../test_helper", __FILE__)
 
 class Picard::AstHelperTest < Test::Unit::TestCase
   include Picard::TestUnit
@@ -47,7 +47,7 @@ class Picard::AstHelperTest < Test::Unit::TestCase
 
       actual[1].index == 1
       s(:call, nil, :expect, s(:arglist)) == actual[1].ast
-  
+
       actual[2].index == 2
       actual[2].ast == s(:call, s(:lvar, :x), :==, s(:arglist, s(:lit, 10)))
 
@@ -85,7 +85,7 @@ class Picard::AstHelperTest < Test::Unit::TestCase
       result = @helper.wrap_assertion(s(:lit, true))
 
     expect
-      result == s(:call, nil, :assert, s(:arglist, s(:lit, true)))
+      result == s(:call, nil, :assert, s(:arglist, s(:lit, true)), s(:str, 'Failed: true'))
   end
 
   def test_should_replace_statement

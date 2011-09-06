@@ -1,4 +1,4 @@
-require_relative '../test_helper'
+require File.expand_path("../../test_helper", __FILE__)
 
 class Picard::TestUnitTest < Test::Unit::TestCase
   include Picard::TestUnit
@@ -15,7 +15,7 @@ class Picard::TestUnitTest < Test::Unit::TestCase
       x == 2
     end
 
-    def assert arg
+    def assert arg, message
       @assert_args ||= []
       @assert_args << arg
     end
