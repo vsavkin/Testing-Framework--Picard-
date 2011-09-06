@@ -2,7 +2,6 @@
 
 Picard is a test framework heavily inspired by "Spock" (an excellent test framework for the Groovy programming language). It does some AST manipulation to make the structure of your test explicit:
 
-``
     def test_method
       given
         x = 1
@@ -10,7 +9,6 @@ Picard is a test framework heavily inspired by "Spock" (an excellent test framew
       expect
         x == 1
     end
-``
 
 The "given" block is a setup you do for your test. Every line in the "expect" block is an assertion.
 
