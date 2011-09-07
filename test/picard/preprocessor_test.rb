@@ -7,12 +7,7 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
   class BaseTestClass
     attr_reader :assert_args
 
-    def initialize
-      @assert_args = []
-    end
-
-    def given
-    end
+    def given; end
 
     def expect
     end
@@ -21,6 +16,7 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
     end
 
     def assert arg, message
+      @assert_args ||= []
       @assert_args << arg
     end
   end
@@ -99,26 +95,6 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
       tc.regular_method
 
     expect
-      tc.assert_args == []
+      tc.assert_args == nil
   end
-
-
-  #class TestClass5 < BaseTestClass
-  #  def test_method
-  #    expect
-  #    x == 1
-  #
-  #    where
-  #    x = 2
-  #  end
-  #end
-  #
-  #def test_should_use_local_variables_from_where_block
-  #  tr = Picard::Preprocessor.new ClassRipper.new,
-  #  tr.preprocess_method(TestClass5, :test_method)
-  #
-  #  tc = TestClass5.new
-  #  tc.test_method
-  #  assert_equal [false], tc.assert_args
-  #end
 end

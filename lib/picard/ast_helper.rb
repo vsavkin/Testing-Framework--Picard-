@@ -5,6 +5,10 @@ module Picard
   class AstHelper
     ResultItem = Struct.new(:index, :ast)
 
+    def initialize wrapper = Picard::AssertionWrapper.new
+      @wrapper = wrapper
+    end
+
     def all_statements method
       method_ast = method.to_ast
       body_statements = extract_statements(method_ast)[1..-1]
@@ -19,8 +23,7 @@ module Picard
     end
 
     def wrap_assertion ast
-      wrapper = Picard::AssertionWrapper.new
-      wrapper.wrap_assertion ast
+      @wrapper.wrap_assertion ast
     end
 
     def replace_statement method, index, new_ast

@@ -2,6 +2,7 @@ require File.expand_path("../../test_helper", __FILE__)
 
 class Picard::AstHelperTest < Test::Unit::TestCase
   include Picard::TestUnit
+  include Picard::SExpressionSugar
 
   class TestClass
     def test_method
@@ -80,14 +81,6 @@ class Picard::AstHelperTest < Test::Unit::TestCase
       @helper.find_all_statements_in_block(all_statements, :expect) == []
   end
 
-  def test_should_wrap_assertion
-    given
-      result = @helper.wrap_assertion(s(:lit, true))
-
-    expect
-      result == s(:call, nil, :assert, s(:arglist, s(:lit, true)), s(:str, 'Failed: true'))
-  end
-
   def test_should_replace_statement
     given
       method = TestClass.instance_method(:test_method_to_replace_statements)
@@ -107,8 +100,11 @@ class Picard::AstHelperTest < Test::Unit::TestCase
       @helper.find_all_local_variables_in_block(all_statements, :where) == [:y, :z]
   end
 
-  private
-  def s(*args)
-    Sexp.new *args
+  def test_should_wrap_assertion
+    given
+      result = @helper.wrap_assertion(s(:lit, true))
+
+    expect
+      result == s(:call, nil, :assert, s(:arglist, s(:lit, true), s(:str, 'Failed: true')))
   end
 end

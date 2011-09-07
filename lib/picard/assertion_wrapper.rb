@@ -5,22 +5,38 @@ require_relative 's_expression_sugar'
 module Picard
   class AssertionWrapper
     include Picard::SExpressionSugar
-    
+
     def wrap_assertion ast
       error_message = generate_error_message(ast)
-      if ast[0] == :call and ast[2] == :==
+      if equal_to_assertion? ast
         s(:call, nil,
                  :assert_equal,
-                 s(:arglist, ast[3][1], ast[1], s(:str, error_message)))
+                 s(:arglist,
+                    extract_argument(ast),
+                    extract_receiver(ast),
+                    s(:str, error_message)))
       else
         s(:call, nil,
                  :assert,
-                 s(:arglist, ast),
-                 s(:str, error_message))
+                 s(:arglist,
+                    ast,
+                    s(:str, error_message)))
       end
     end
 
     private
+
+    def equal_to_assertion? ast
+      ast[0] == :call and ast[2] == :==
+    end
+
+    def extract_argument ast
+      ast[3][1]
+    end
+
+    def extract_receiver ast
+      ast[1]
+    end
 
     def generate_error_message ast
       copy = Sexp.from_array(ast.to_a)

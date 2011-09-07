@@ -5,11 +5,6 @@ module Picard
     include Picard::TestUnit
 
     def test_should_work_with_assert_equals
-      given
-        x = 1
-      
-      expect
-        x == 1
     end
   end
 end

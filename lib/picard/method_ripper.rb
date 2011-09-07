@@ -1,5 +1,4 @@
 require 'live_ast'
-require 'live_ast/to_ruby'
 
 module Picard
   class MethodRipper
