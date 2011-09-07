@@ -19,11 +19,8 @@ module Picard
     end
 
     def wrap_assertion ast
-      error_message = generate_error_message(ast)
-      Sexp.new(:call, nil,
-               :assert,
-               Sexp.new(:arglist, ast),
-               Sexp.new(:str, error_message))
+      wrapper = Picard::AssertionWrapper.new
+      wrapper.wrap_assertion ast
     end
 
     def replace_statement method, index, new_ast
@@ -51,11 +48,6 @@ module Picard
     end
 
     private
-
-    def generate_error_message ast
-      copy = Sexp.from_array(ast.to_a)
-      'Failed: ' + ast_to_str(copy)
-    end
 
     def find_index_of_statements_calling items, method_name
       items.index do |item|

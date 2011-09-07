@@ -33,7 +33,7 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
   class TestClass < BaseTestClass
     def test_method
       expect
-      1 == 2
+      false
     end
   end
 
@@ -51,7 +51,7 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
   class TestClass2 < BaseTestClass
     def test_method
       expect
-      1 == 2
+      false
     end
   end
 
@@ -69,7 +69,7 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
   class TestClass3 < BaseTestClass
     def test_method
       expect
-      1 == 2
+      false
     end
   end
 
@@ -88,7 +88,7 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
 
   class TestClass4 < BaseTestClass
     def regular_method
-      1 == 2
+      false
     end
   end
 

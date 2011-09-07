@@ -8,11 +8,8 @@ class Picard::TestUnitTest < Test::Unit::TestCase
     attr_reader :assert_args
 
     def test_method
-      given
-      x = 1
-
       expect
-      x == 2
+      false
     end
 
     def assert arg, message
