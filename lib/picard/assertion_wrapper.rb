@@ -6,6 +6,10 @@ module Picard
   class AssertionWrapper
     include Picard::SExpressionSugar
 
+    def initialize formatter = Picard::ErrorMessageFormatter.new
+      @formatter = formatter
+    end
+
     def wrap_assertion ast
       error_message = generate_error_message(ast)
       if equal_to_assertion? ast
@@ -40,7 +44,7 @@ module Picard
 
     def generate_error_message ast
       copy = Sexp.from_array(ast.to_a)
-      'Failed: ' + ast_to_str(copy)
+      @formatter.format_message ast_to_str(copy)
     end
 
     def ast_to_str ast

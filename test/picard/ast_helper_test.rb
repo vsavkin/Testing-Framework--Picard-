@@ -34,7 +34,9 @@ class Picard::AstHelperTest < Test::Unit::TestCase
   end
 
   def setup
-    @helper = Picard::AstHelper.new
+    formatter = Picard::SimpleErrorMessageFormatter.new
+    wrapper = Picard::AssertionWrapper.new(formatter)
+    @helper = Picard::AstHelper.new wrapper
   end
 
   def test_should_return_all_statements_of_method
@@ -105,6 +107,6 @@ class Picard::AstHelperTest < Test::Unit::TestCase
       result = @helper.wrap_assertion(s(:lit, true))
 
     expect
-      result == s(:call, nil, :assert, s(:arglist, s(:lit, true), s(:str, 'Failed: true')))
+      result == s(:call, nil, :assert, s(:arglist, s(:lit, true), s(:str, 'true')))
   end
 end

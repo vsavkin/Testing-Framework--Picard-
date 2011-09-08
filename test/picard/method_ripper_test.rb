@@ -19,13 +19,16 @@ class Picard::MethodRipperTest < Test::Unit::TestCase
   end
 
   def setup
-    @ripper = Picard::MethodRipper.new
+    formatter = Picard::SimpleErrorMessageFormatter.new
+    wrapper = Picard::AssertionWrapper.new(formatter)
+    helper = Picard::AstHelper.new(wrapper)
+    @ripper = Picard::MethodRipper.new(helper)
   end
 
   def test_should_wrap_all_assertions_after_expect_method_call
     given
       method = TestClass.instance_method(:test_method)
-      expected_after_processing = "def test_method\ngiven\nsomething\nexpect\nassert(false, \"Failed: false\")\nassert(true, \"Failed: true\")\nend"
+      expected_after_processing = "def test_method\ngiven\nsomething\nexpect\nassert(false, \"false\")\nassert(true, \"true\")\nend"
 
     expect
       @ripper.wrap_all_assertions(method) == expected_after_processing

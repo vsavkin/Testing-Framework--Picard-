@@ -5,7 +5,8 @@ class Picard::AssertionWrapperTest < Test::Unit::TestCase
   include Picard::SExpressionSugar
 
   def setup
-    @wrapper = Picard::AssertionWrapper.new
+    formatter = Picard::SimpleErrorMessageFormatter.new
+    @wrapper = Picard::AssertionWrapper.new(formatter)
   end
 
   def test_should_wrap_simple_assertions
@@ -13,7 +14,7 @@ class Picard::AssertionWrapperTest < Test::Unit::TestCase
       result = @wrapper.wrap_assertion(s(:lit, true))
 
     expect
-      result == s(:call, nil, :assert, s(:arglist, s(:lit, true), s(:str, 'Failed: true')))
+      result == s(:call, nil, :assert, s(:arglist, s(:lit, true), s(:str, 'true')))
   end
 
   def test_should_wrap_equal_to_assertions
@@ -21,7 +22,7 @@ class Picard::AssertionWrapperTest < Test::Unit::TestCase
       result = @wrapper.wrap_assertion(s(:call, s(:lit, 1), :==, s(:arglist, s(:lit, 2))))
 
     expect
-      result == s(:call, nil, :assert_equal, s(:arglist, s(:lit, 2), s(:lit, 1), s(:str, 'Failed: (1 == 2)')))
+      result == s(:call, nil, :assert_equal, s(:arglist, s(:lit, 2), s(:lit, 1), s(:str, '(1 == 2)')))
   end
 
   def another
