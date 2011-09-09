@@ -28,6 +28,11 @@ module Picard
       end
     end
 
+    def generate_error_message ast
+      copy = Sexp.from_array(ast.to_a)
+      @formatter.format_message ast_to_str(copy), :file => 'file', :lineno => ast.line
+    end
+    
     private
 
     def equal_to_assertion? ast
@@ -40,11 +45,6 @@ module Picard
 
     def extract_receiver ast
       ast[1]
-    end
-
-    def generate_error_message ast
-      copy = Sexp.from_array(ast.to_a)
-      @formatter.format_message ast_to_str(copy)
     end
 
     def ast_to_str ast

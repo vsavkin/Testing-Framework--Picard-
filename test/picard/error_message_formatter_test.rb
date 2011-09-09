@@ -6,8 +6,9 @@ class Picard::ErrorMessageFormatterTest < Test::Unit::TestCase
   def test_should_wrap_error_message
     given
       formatter = Picard::ErrorMessageFormatter.new
+      expected = "---------------------------\n|Failed Assertion: message|\n|File: file, Line: 1      |\n---------------------------"
 
     expect
-      formatter.format_message('message') == "---------------------------\n|Failed Assertion: message|\n---------------------------"
+      formatter.format_message('message', :file => 'file', :lineno => 1) == expected
   end
 end

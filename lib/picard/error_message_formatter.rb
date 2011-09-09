@@ -1,14 +1,27 @@
 module Picard
   class ErrorMessageFormatter
-    def format_message message
+     def format_message message, metainfo
+      location = "File: #{metainfo[:file]}, Line: #{metainfo[:lineno]}"
       new_message = "Failed Assertion: #{message}"
-      line = '-' * (new_message.length + 2)
-      "#{line}\n|#{new_message}|\n#{line}"
+
+      lines = make_same_size(location, new_message)
+      border = '-' * (lines.first.length + 2)
+      "#{border}\n|#{lines[0]}|\n|#{lines[1]}|\n#{border}"
+    end
+
+    private
+    def make_same_size a, b
+      return make_same_size(b, a) if a.length < b.length
+      if a.length > b.length
+        [a, b + ' ' * (a.length - b.length)]
+      else
+        [a + ' ' * (b.length - a.length), b]
+      end
     end
   end
 
   class SimpleErrorMessageFormatter
-    def format_message message
+    def format_message message, metainfo
       message
     end
   end
