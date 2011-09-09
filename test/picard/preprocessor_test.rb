@@ -108,4 +108,37 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
     expect
       TestClass5.picard_meta_info.file == 'file'
   end
+
+
+  class TestClass6 < BaseTestClass
+    def test_empty
+    end
+  end
+
+  def test_should_successfully_transform_empty_methods
+    given
+      @pr.preprocess_method(TestClass6, :test_empty)
+      tc = TestClass6.new
+      tc.test_empty
+
+    expect
+      tc.assert_args == nil
+  end
+
+
+  class TestClass7 < BaseTestClass
+    def test_empty
+      expect
+    end
+  end
+
+  def test_should_successfully_transform_methods_with_empty_expect_block
+    given
+      @pr.preprocess_method(TestClass7, :test_empty)
+      tc = TestClass7.new
+      tc.test_empty
+
+    expect
+      tc.assert_args == nil
+  end
 end
