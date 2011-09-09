@@ -14,7 +14,9 @@ class Picard::TestUnitTest < Test::Unit::TestCase
 
     def assert arg, message
       @assert_args ||= []
+      @assert_messages ||= []
       @assert_args << arg
+      @assert_messages << message
     end
   end
 

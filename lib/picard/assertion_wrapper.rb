@@ -18,19 +18,19 @@ module Picard
                  s(:arglist,
                     extract_argument(ast),
                     extract_receiver(ast),
-                    s(:str, error_message)))
+                    s(:call, nil, :picard_format_error_message, s(:arglist, s(:str, 'true')))))
       else
         s(:call, nil,
                  :assert,
                  s(:arglist,
                     ast,
-                    s(:str, error_message)))
+                    s(:call, nil, :picard_format_error_message, s(:arglist, s(:str, error_message)))))
       end
     end
-
+  
     def generate_error_message ast
       copy = Sexp.from_array(ast.to_a)
-      @formatter.format_message ast_to_str(copy), :file => 'file', :lineno => ast.line
+      @formatter.format_message ast_to_str(copy), Struct.new(:file, :lineno).new('file', 1)
     end
     
     private

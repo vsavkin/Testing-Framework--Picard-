@@ -1,7 +1,7 @@
 module Picard
   class ErrorMessageFormatter
-     def format_message message, metainfo
-      location = "File: #{metainfo[:file]}, Line: #{metainfo[:lineno]}"
+     def format_message message, context
+      location = "File: #{context.file}, Line: #{context.lineno}"
       new_message = "Failed Assertion: #{message}"
 
       lines = make_same_size(location, new_message)
@@ -21,7 +21,7 @@ module Picard
   end
 
   class SimpleErrorMessageFormatter
-    def format_message message, metainfo
+    def format_message message, context
       message
     end
   end

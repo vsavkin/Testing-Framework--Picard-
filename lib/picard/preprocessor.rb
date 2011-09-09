@@ -10,6 +10,10 @@ module Picard
       @preprocessed_methods = []
     end
 
+    def generate_context_method clazz, context
+      @class_ripper.save_meta_info clazz, context
+    end
+
     def preprocess_class clazz
       all_test_methods = @class_ripper.all_test_method_names(clazz)
       all_test_methods.each do |m|

@@ -8,12 +8,10 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
     attr_reader :assert_args
 
     def given; end
+    def expect; end
+    def where; end
+    def picard_format_error_message(m); end
 
-    def expect
-    end
-
-    def where
-    end
 
     def assert arg, message
       @assert_args ||= []
@@ -96,5 +94,18 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
 
     expect
       tc.assert_args == nil
+  end
+
+
+  class TestClass5 < BaseTestClass
+  end
+
+  def test_should_generate_method_returning_context
+    given
+      context = Struct.new(:file).new('file')
+      @pr.generate_context_method(TestClass5, context)
+
+    expect
+      TestClass5.picard_meta_info.file == 'file'
   end
 end

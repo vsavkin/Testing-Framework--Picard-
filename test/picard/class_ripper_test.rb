@@ -46,5 +46,13 @@ class Picard::ClassRipperTest < Test::Unit::TestCase
     expect
       DummyClass.new.dummy == 'replaced'
   end
+
+  def test_should_create_class_method_containing_meta_information
+    given
+      @ripper.save_meta_info DummyClass, :key => :value
+
+    expect
+      DummyClass.picard_meta_info[:key] == :value
+  end
 end
 

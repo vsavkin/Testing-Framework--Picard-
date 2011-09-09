@@ -107,6 +107,6 @@ class Picard::AstHelperTest < Test::Unit::TestCase
       result = @helper.wrap_assertion(s(:lit, true))
 
     expect
-      result == s(:call, nil, :assert, s(:arglist, s(:lit, true), s(:str, 'true')))
+      result == s(:call, nil, :assert, s(:arglist, s(:lit, true), s(:call, nil, :picard_format_error_message, s(:arglist, s(:str, 'true')))))
   end
 end
