@@ -7,7 +7,7 @@ module Picard
     end
 
     def picard_format_error_message message
-      'message'
+      message
     end
   end
 
@@ -20,8 +20,15 @@ module Picard
 
   module TestUnit
     def self.included clazz
+      save_meta_information clazz
       clazz.send :include, InstanceMethods
       clazz.send :extend, ClassMethods
+    end
+
+    private
+    def self.save_meta_information clazz
+      context = Picard::Context.new
+      Picard::Preprocessor.new.generate_context_method clazz, context
     end
   end
 end

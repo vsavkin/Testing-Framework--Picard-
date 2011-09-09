@@ -28,4 +28,9 @@ class Picard::TestUnitTest < Test::Unit::TestCase
     expect
       test.assert_args == [false]
   end
+
+  def test_should_add_meta_information_to_class
+    expect
+      TestUsingPicard.picard_meta_info.file == 'context_test.rb'
+  end
 end
