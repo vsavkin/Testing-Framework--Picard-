@@ -10,7 +10,7 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
     def given; end
     def expect; end
     def where; end
-    def picard_format_error_message(m); end
+    def picard_format_error_message(m,l); end
 
 
     def assert arg, message

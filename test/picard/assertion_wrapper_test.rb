@@ -6,8 +6,7 @@ class Picard::AssertionWrapperTest < Test::Unit::TestCase
   include RR::Adapters::RRMethods
 
   def setup
-    formatter = Picard::SimpleErrorMessageFormatter.new
-    @wrapper = Picard::AssertionWrapper.new(formatter)
+    @wrapper = Picard::AssertionWrapper.new
   end
 
   def test_should_wrap_simple_assertions
@@ -19,7 +18,7 @@ class Picard::AssertionWrapperTest < Test::Unit::TestCase
                   :assert,
                   s(:arglist,
                     s(:lit, true),
-                    s(:call, nil, :picard_format_error_message, s(:arglist, s(:str, 'true')))))
+                    s(:call, nil, :picard_format_error_message, s(:arglist, s(:str, 'true'), s(:lit, nil)))))
   end
 
   def test_should_wrap_equal_to_assertions
@@ -32,7 +31,7 @@ class Picard::AssertionWrapperTest < Test::Unit::TestCase
                   s(:arglist,
                     s(:lit, 2),
                     s(:lit, 1),
-                    s(:call, nil, :picard_format_error_message, s(:arglist, s(:str, 'true')))))
+                    s(:call, nil, :picard_format_error_message, s(:arglist, s(:str, '(1 == 2)'), s(:lit, nil)))))
   end
 
   private

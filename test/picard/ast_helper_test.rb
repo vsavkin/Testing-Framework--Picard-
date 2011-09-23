@@ -11,9 +11,6 @@ class Picard::AstHelperTest < Test::Unit::TestCase
       expect
       x == 10
       x == 12
-
-      where
-      y = 1
     end
 
     def method_without_assertions
@@ -107,6 +104,6 @@ class Picard::AstHelperTest < Test::Unit::TestCase
       result = @helper.wrap_assertion(s(:lit, true))
 
     expect
-      result == s(:call, nil, :assert, s(:arglist, s(:lit, true), s(:call, nil, :picard_format_error_message, s(:arglist, s(:str, 'true')))))
+      result == s(:call, nil, :assert, s(:arglist, s(:lit, true), s(:call, nil, :picard_format_error_message, s(:arglist, s(:str, 'true'), s(:lit, nil)))))
   end
 end

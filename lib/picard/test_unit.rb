@@ -1,4 +1,6 @@
 module Picard
+  Context = Struct.new(:file, :lineno)
+
   module InstanceMethods
     def given
     end
@@ -6,8 +8,11 @@ module Picard
     def expect
     end
 
-    def picard_format_error_message message
-      message
+    def picard_format_error_message line, lineno
+      formatter = ErrorMessageFormatter.new
+      context = self.class.picard_meta_info
+      context.lineno = lineno
+      formatter.format_message line, context
     end
   end
 
@@ -27,7 +32,8 @@ module Picard
 
     private
     def self.save_meta_information clazz
-      context = Picard::Context.new
+      file = caller[1].split(':')[0]
+      context = Picard::Context.new(file)
       Picard::Preprocessor.new.generate_context_method clazz, context
     end
   end

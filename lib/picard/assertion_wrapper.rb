@@ -6,33 +6,26 @@ module Picard
   class AssertionWrapper
     include Picard::SExpressionSugar
 
-    def initialize formatter = Picard::ErrorMessageFormatter.new
-      @formatter = formatter
-    end
-
     def wrap_assertion ast
-      error_message = generate_error_message(ast)
+      line = ast_to_str(Sexp.from_array(ast.to_a))
+      lineno = ast.line
+      
       if equal_to_assertion? ast
         s(:call, nil,
                  :assert_equal,
                  s(:arglist,
                     extract_argument(ast),
                     extract_receiver(ast),
-                    s(:call, nil, :picard_format_error_message, s(:arglist, s(:str, 'true')))))
+                    s(:call, nil, :picard_format_error_message, s(:arglist, s(:str, line), s(:lit, lineno)))))
       else
         s(:call, nil,
                  :assert,
                  s(:arglist,
                     ast,
-                    s(:call, nil, :picard_format_error_message, s(:arglist, s(:str, error_message)))))
+                    s(:call, nil, :picard_format_error_message, s(:arglist, s(:str, line), s(:lit, lineno)))))
       end
     end
-  
-    def generate_error_message ast
-      copy = Sexp.from_array(ast.to_a)
-      @formatter.format_message ast_to_str(copy), Struct.new(:file, :lineno).new('file', 1)
-    end
-    
+
     private
 
     def equal_to_assertion? ast

@@ -9,5 +9,12 @@ module Picard
     #  expect
     #    1 == 2
     #end
+    #def regular_method
+    #  method 1, 2
+    #end
+    #
+    #def test_two
+    #  p DemoTest.instance_method(:regular_method).to_ast
+    #end
   end
 end

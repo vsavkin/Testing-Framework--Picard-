@@ -31,6 +31,6 @@ class Picard::TestUnitTest < Test::Unit::TestCase
 
   def test_should_add_meta_information_to_class
     expect
-      TestUsingPicard.picard_meta_info.file == 'context_test.rb'
+      TestUsingPicard.picard_meta_info.file =~ /test_unit_test.rb/
   end
 end
