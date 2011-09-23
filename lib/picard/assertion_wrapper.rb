@@ -7,7 +7,7 @@ module Picard
     include Picard::SExpressionSugar
 
     def wrap_assertion ast
-      line = ast_to_str(Sexp.from_array(ast.to_a))
+      line = ast_to_str(ast)
       lineno = ast.line
       
       if equal_to_assertion? ast
@@ -41,7 +41,8 @@ module Picard
     end
 
     def ast_to_str ast
-      Ruby2Ruby.new.process ast
+      copy = Sexp.from_array(ast.to_a)
+      Ruby2Ruby.new.process copy
     end
   end
 end
