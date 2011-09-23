@@ -6,10 +6,15 @@ class Picard::ErrorMessageFormatterTest < Test::Unit::TestCase
   def test_should_wrap_error_message
     given
       formatter = Picard::ErrorMessageFormatter.new
-      expected = "-----------------------------\n| Failed Assertion: message |\n| File: file, Line: 1       |\n-----------------------------"
+      expected = <<str
+-----------------------------
+| Failed Assertion: message |
+| File: file, Line: 1       |
+-----------------------------
+str
 
     expect
-      formatter.format_message('message', create_context('file', 1)) == expected
+      formatter.format_message('message', create_context('file', 1)) == expected.chomp
   end
 
   private

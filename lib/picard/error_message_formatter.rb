@@ -5,7 +5,7 @@ module Picard
       new_message = "Failed Assertion: #{message}"
 
       lines = make_same_size(location, new_message)
-      border = '-' * (lines.first.length + 4)
+      border = '-' * (lines.first.length + 4) #4 = 2 pipes + 2 spaces
       "#{border}\n| #{lines[0]} |\n| #{lines[1]} |\n#{border}"
     end
 
