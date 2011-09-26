@@ -4,7 +4,7 @@ require 'ruby2ruby'
 
 module Picard
   class Preprocessor
-    META_INFO_METHOD_NAME = :picard_meta_info
+    CONTEXT_METHOD_NAME = :picard_meta_info
 
     def initialize class_ripper = ClassRipper.new, method_ripper = MethodRipper.new
       @class_ripper = class_ripper
@@ -13,7 +13,7 @@ module Picard
     end
 
     def generate_context_method clazz, context
-      @class_ripper.save_meta_info clazz, META_INFO_METHOD_NAME, context
+      @class_ripper.save_meta_info clazz, CONTEXT_METHOD_NAME, context
     end
 
     def preprocess_class clazz

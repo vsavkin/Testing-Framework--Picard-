@@ -105,7 +105,7 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
       @pr.generate_context_method(TestClass5, context)
 
     expect
-      TestClass5.send(Preprocessor::META_INFO_METHOD_NAME).file == 'file'
+      TestClass5.send(Preprocessor::CONTEXT_METHOD_NAME).file == 'file'
   end
 
 
