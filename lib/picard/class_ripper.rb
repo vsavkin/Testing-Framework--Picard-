@@ -14,8 +14,8 @@ module Picard
       clazz.class_eval new_method
     end
 
-    def save_meta_info clazz, metainfo
-      clazz.meta_def :picard_meta_info do
+    def save_meta_info clazz, method_name, metainfo
+      clazz.meta_def method_name do
         metainfo
       end
     end

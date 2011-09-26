@@ -2,57 +2,68 @@ require File.expand_path("../../test_helper", __FILE__)
 
 class Picard::ClassRipperTest < Test::Unit::TestCase
   include Picard::TestUnit
-  
-  class TestClass
-    def test_one; end
-    def test_two; end
-    def three; end
-  end
-
-  class TestClassWithoutTestMethods
-    def method1; end
-  end
-
-  class DummyClass
-    def dummy
-      'dummy'
-    end
-  end
 
   def setup
     @ripper = Picard::ClassRipper.new
   end
+  
 
-  def test_should_return_if_method_is_test_method
+  def test_should_tell_if_method_name_is_test_method_name
     expect
       @ripper.test_method?('test_method')
       !@ripper.test_method?('regular_method')
   end
 
+  
+  class TestClass1
+    def test_one; end
+    def test_two; end
+    def three; end
+  end
+
   def test_should_return_list_of_all_test_methods
     expect
-      @ripper.all_test_method_names(TestClass) == [:test_one, :test_two]
+      @ripper.all_test_method_names(TestClass1) == [:test_one, :test_two]
+  end
+
+
+  class TestClass2
+    def method1; end
   end
 
   def test_should_return_empty_list_if_there_are_no_test_methods
     expect
-      @ripper.all_test_method_names(TestClassWithoutTestMethods) == []
+      @ripper.all_test_method_names(TestClass2) == []
+  end
+
+
+  class TestClass3
+    def dummy
+      'dummy'
+    end
   end
 
   def test_should_replace_method_implementation
     given
-      @ripper.replace_method(DummyClass, "def dummy\n 'replaced' \n end")
+      @ripper.replace_method(TestClass3, "def dummy\n 'replaced' \n end")
 
     expect
-      DummyClass.new.dummy == 'replaced'
+      TestClass3.new.dummy == 'replaced'
+  end
+
+
+  class TestClass4
+    def dummy
+      'dummy'
+    end
   end
 
   def test_should_create_class_method_containing_meta_information
     given
-      @ripper.save_meta_info DummyClass, :key => :value
+      @ripper.save_meta_info TestClass4, :picard_meta_info, :key => :value
 
     expect
-      DummyClass.picard_meta_info[:key] == :value
+      TestClass4.picard_meta_info[:key] == :value
   end
 end
 

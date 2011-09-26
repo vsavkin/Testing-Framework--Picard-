@@ -11,7 +11,7 @@ module Picard
     end
 
     def generate_context_method clazz, context
-      @class_ripper.save_meta_info clazz, context
+      @class_ripper.save_meta_info clazz, :picard_meta_info, context
     end
 
     def preprocess_class clazz
