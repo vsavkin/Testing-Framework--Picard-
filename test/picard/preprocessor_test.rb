@@ -23,18 +23,17 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
     @pr = Picard::Preprocessor.new
   end
 
-  # We need to use a class per test for test isolation
-  class TestClass < BaseTestClass
+  class TestClass1 < BaseTestClass
     def test_method
       expect
       false
     end
   end
 
-  def test_should_wrap_all_assertions_after_expect_in_all_test_methods
+  def test_should_wrap_assertions_after_expect_in_all_test_methods
     given
-      @pr.preprocess_class(TestClass)
-      tc = TestClass.new
+      @pr.preprocess_class(TestClass1)
+      tc = TestClass1.new
       tc.test_method
 
     expect
@@ -67,7 +66,7 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
     end
   end
 
-  def test_should_not_preprocess_the_same_method_twice
+  def test_should_be_idempotent
     given
       @pr.preprocess_method(TestClass3, :test_method)
       @pr.preprocess_method(TestClass3, :test_method)
@@ -106,7 +105,7 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
       @pr.generate_context_method(TestClass5, context)
 
     expect
-      TestClass5.picard_meta_info.file == 'file'
+      TestClass5.send(Preprocessor::META_INFO_METHOD_NAME).file == 'file'
   end
 
 
