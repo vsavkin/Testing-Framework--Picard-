@@ -11,15 +11,15 @@ module Picard
 
     def all_statements method
       method_ast = method.to_ast
-      body_statements = extract_statements(method_ast)[1..-1]
+      body_statements = extract_body_statements(method_ast)
       wrap_in_result_items body_statements
     end
 
-    def find_all_statements_in_block items, block_name
-      start_index = find_index_of_statements_calling(items, block_name)
-      end_index = find_index_of_statements_calling(items, :where)
+    def find_all_statements_in_block statements, block_name
+      start_index = find_index_of_statements_calling(statements, block_name)
+      end_index = find_index_of_statements_calling(statements, :where)
       end_index = end_index ? end_index - 1 : -1
-      start_index ? items[start_index + 1 .. end_index] : []
+      start_index ? statements[start_index + 1 .. end_index] : []
     end
 
     def wrap_assertion ast
@@ -36,16 +36,6 @@ module Picard
       method.to_ast
     end
 
-    def find_all_local_variables_in_block items, block_name
-      index = find_index_of_statements_calling(items, block_name)
-      return [] unless index
-      items[index + 1 .. -1].find_all do |e|
-        e.ast[0] == :lasgn
-      end.collect do |e|
-        e.ast[1]
-      end
-    end
-
     def ast_to_str ast
       Ruby2Ruby.new.process ast
     end
@@ -57,6 +47,15 @@ module Picard
         ast = item.ast
         ast[0] == :call and ast[2] == method_name
       end
+    end
+
+    def extract_body_statements method_ast
+      st = extract_statements(method_ast)
+      remove_prefix_statement st
+    end
+
+    def remove_prefix_statement statements
+      statements[1..-1]
     end
 
     def extract_statements method_ast
