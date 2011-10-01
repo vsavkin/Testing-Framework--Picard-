@@ -35,35 +35,5 @@ class Picard::ClassRipperTest < Test::Unit::TestCase
     expect
       @ripper.all_test_method_names(TestClass2) == []
   end
-
-
-  class TestClass3
-    def dummy
-      'dummy'
-    end
-  end
-
-  def test_should_replace_method_implementation
-    given
-      @ripper.replace_method(TestClass3, "def dummy\n 'replaced' \n end")
-
-    expect
-      TestClass3.new.dummy == 'replaced'
-  end
-
-
-  class TestClass4
-    def dummy
-      'dummy'
-    end
-  end
-
-  def test_should_create_class_method_containing_meta_information
-    given
-      @ripper.save_meta_info TestClass4, :picard_meta_info, :key => :value
-
-    expect
-      TestClass4.picard_meta_info[:key] == :value
-  end
 end
 

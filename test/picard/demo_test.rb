@@ -14,7 +14,8 @@ module Picard
     #end
     #
     #def test_two
-    #  p DemoTest.instance_method(:regular_method).to_ast
+    #  ast = DemoTest.instance_method(:regular_method).to_ast
+    #  puts ast.class.name
     #end
   end
 end

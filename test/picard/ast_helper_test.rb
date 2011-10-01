@@ -5,9 +5,8 @@ class Picard::AstHelperTest < Test::Unit::TestCase
   include Picard::SExpressionSugar
 
   def setup
-    formatter = Picard::SimpleErrorMessageFormatter.new
-    wrapper = Picard::AssertionWrapper.new(formatter)
-    @helper = Picard::AstHelper.new wrapper
+    @wrapper = flexmock('wrapper')
+    @helper = Picard::AstHelper.new @wrapper
   end
 
 
@@ -43,8 +42,7 @@ class Picard::AstHelperTest < Test::Unit::TestCase
   def test_should_find_all_statements_in_specified_block
     given
       method = TestClass2.instance_method(:test_method)
-      all_statements = @helper.all_statements(method)
-      actual = @helper.find_all_statements_in_block(all_statements, :expect)
+      actual = @helper.all_statements_in_block(method, :expect)
 
     expect
       actual.size == 1
@@ -60,13 +58,12 @@ class Picard::AstHelperTest < Test::Unit::TestCase
     end
   end
 
-  def test_should_return_empty_array_if_specified_method_call_was_not_found
+  def test_should_return_empty_array_if_block_is_not_found
     given
       method = TestClass3.instance_method(:test_method)
-      all_statements = @helper.all_statements(method)
 
     expect
-      @helper.find_all_statements_in_block(all_statements, :expect) == []
+      @helper.all_statements_in_block(method, :where) == []
   end
 
 
@@ -87,11 +84,34 @@ class Picard::AstHelperTest < Test::Unit::TestCase
   end
 
 
+  class TestClass5
+    def method
+    end
+  end
+
   def test_should_wrap_assertion
     given
-      result = @helper.wrap_assertion(s(:lit, true))
+      method = TestClass5.instance_method(:method)
+      ast = s(:lit, true)
+      @wrapper.should_receive(:wrap_assertion).and_return('wrapped ast')
 
     expect
-      result == s(:call, nil, :assert, s(:arglist, s(:lit, true), s(:call, nil, :picard_format_error_message, s(:arglist, s(:str, 'true'), s(:lit, nil)))))
+      @helper.wrap_assertion(method, ast) == 'wrapped ast'
+  end
+
+
+  class TestClass5
+    def method
+      false
+    end
+  end
+
+  def test_should_return_string_representation_of_a_method_reflecting_updated_ast
+    given
+      method = TestClass5.instance_method(:method)
+      @helper.replace_statement(method, 0, s(:lit, true))
+
+    expect
+      @helper.method_to_string(method) == "def method\ntrue\nend"
   end
 end

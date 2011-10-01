@@ -15,32 +15,39 @@ module Picard
       wrap_in_result_items body_statements
     end
 
-    def find_all_statements_in_block statements, block_name
+    def all_statements_in_block method, block_name
+      statements = all_statements(method)
+
       start_index = find_index_of_statements_calling(statements, block_name)
-      end_index = find_index_of_statements_calling(statements, :where)
-      end_index = end_index ? end_index - 1 : -1
-      start_index ? statements[start_index + 1 .. end_index] : []
+      start_index ? statements[start_index + 1 .. -1] : []
     end
 
-    def wrap_assertion ast
-      @wrapper.wrap_assertion ast
+    def wrap_assertion method, ast
+      context = Picard::Context.new(method.source_location, ast.line)
+      @wrapper.wrap_assertion ast, context
     end
 
-    def replace_statement method, index, new_ast
+    def replace_statement method, index, new_statement_ast
       method_ast = method.to_ast
       body_statements = extract_statements(method_ast)
-      body_statements[index + 1] = new_ast
+      body_statements[index + 1] = new_statement_ast
     end
 
-    def extract_ast method
-      method.to_ast
+    def method_to_string method
+      ast = method.to_ast
+      str = ast_to_str ast
+      remove_spaces str
     end
+
+    private
 
     def ast_to_str ast
       Ruby2Ruby.new.process ast
     end
 
-    private
+    def remove_spaces str
+      str.gsub(/\n\s+/, "\n")
+    end
 
     def find_index_of_statements_calling items, method_name
       items.index do |item|

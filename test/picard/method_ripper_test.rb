@@ -4,9 +4,9 @@ class Picard::MethodRipperTest < Test::Unit::TestCase
   include Picard::TestUnit
   
   class TestClass
+    attr_reader :assert_args
+    
     def test_method
-      given
-      something
       expect
       false
     end
@@ -14,11 +14,17 @@ class Picard::MethodRipperTest < Test::Unit::TestCase
     def regular_method
       false
     end
+
+    def expect; end
+
+    def assert arg
+      @assert_args ||= []
+      @assert_args << arg
+    end
   end
 
   def setup
-    formatter = Picard::SimpleErrorMessageFormatter.new
-    wrapper = Picard::AssertionWrapper.new(formatter)
+    wrapper = Picard::SimpleAssertionWrapper.new
     helper = Picard::AstHelper.new(wrapper)
     @ripper = Picard::MethodRipper.new(helper)
   end
@@ -26,20 +32,20 @@ class Picard::MethodRipperTest < Test::Unit::TestCase
   def test_should_wrap_all_assertions_after_expect_method_call
     given
       method = TestClass.instance_method(:test_method)
-
-      #it's a known defect. Line number needs to be 11. todo FIXIT
-      expected_after_processing = "def test_method\ngiven\nsomething\nexpect\nassert(false, picard_format_error_message(\"false\", 12))\nend"
+      @ripper.wrap_all_assertions!(method)
+      tc = TestClass.new
+      tc.test_method
 
     expect
-      @ripper.wrap_all_assertions(method) == expected_after_processing
+      tc.assert_args == [false]
   end
 
-  def test_should_return_existing_implementation_if_there_was_no_expect_method_call
+  def test_should_not_change_method_if_no_expect_block
     given
       method = TestClass.instance_method(:regular_method)
-      expected_after_processing = "def regular_method\nfalse\nend"
+      @ripper.wrap_all_assertions! method
 
     expect
-      @ripper.wrap_all_assertions(method) == expected_after_processing
+      TestClass.new.regular_method == false
   end
 end

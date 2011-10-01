@@ -4,16 +4,10 @@ require 'ruby2ruby'
 
 module Picard
   class Preprocessor
-    CONTEXT_METHOD_NAME = :picard_meta_info
-
     def initialize class_ripper = ClassRipper.new, method_ripper = MethodRipper.new
       @class_ripper = class_ripper
       @method_ripper = method_ripper
       @preprocessed_methods = []
-    end
-
-    def generate_context_method clazz, context
-      @class_ripper.save_meta_info clazz, CONTEXT_METHOD_NAME, context
     end
 
     def preprocess_class clazz
@@ -28,15 +22,14 @@ module Picard
       return unless @class_ripper.test_method?(method_name)
       
       mark_as_preprocessed method_name
-      replace_method_with_preprocessed clazz, method_name
+      replace_method_with_preprocessed! clazz, method_name
     end
 
     private
 
-    def replace_method_with_preprocessed clazz, method_name
+    def replace_method_with_preprocessed! clazz, method_name
       method = clazz.instance_method(method_name)
-      new_method_str = @method_ripper.wrap_all_assertions(method)
-      @class_ripper.replace_method clazz, new_method_str
+      @method_ripper.wrap_all_assertions!(method)
     end
 
     def preprocessed? method_name

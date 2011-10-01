@@ -6,9 +6,13 @@ module Picard
   class AssertionWrapper
     include Picard::SExpressionSugar
 
-    def wrap_assertion ast
+    def initialize formatter = ErrorMessageFormatter.new
+      @formatter = formatter
+    end
+
+    def wrap_assertion ast, context
       line = ast_to_str(ast)
-      lineno = ast.line
+      message = @formatter.format_message(line, context)
       
       if equal_to_assertion? ast
         s(:call, nil,
@@ -16,13 +20,9 @@ module Picard
                  s(:arglist,
                     extract_argument(ast),
                     extract_receiver(ast),
-                    s(:call, nil, :picard_format_error_message, s(:arglist, s(:str, line), s(:lit, lineno)))))
+                    s(:str, message)))
       else
-        s(:call, nil,
-                 :assert,
-                 s(:arglist,
-                    ast,
-                    s(:call, nil, :picard_format_error_message, s(:arglist, s(:str, line), s(:lit, lineno)))))
+        s(:call, nil, :assert, s(:arglist,ast, s(:str, message)))
       end
     end
 
@@ -43,6 +43,14 @@ module Picard
     def ast_to_str ast
       copy = Sexp.from_array(ast.to_a)
       Ruby2Ruby.new.process copy
+    end
+  end
+
+  class SimpleAssertionWrapper
+    include Picard::SExpressionSugar
+
+    def wrap_assertion ast, context
+      s(:call, nil,:assert,s(:arglist,ast))
     end
   end
 end

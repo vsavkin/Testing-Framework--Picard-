@@ -2,7 +2,6 @@ require File.expand_path("../../test_helper", __FILE__)
 
 class Picard::PreprocessorTest < Test::Unit::TestCase
   include Picard::TestUnit
-  include RR::Adapters::RRMethods
 
   class BaseTestClass
     attr_reader :assert_args
@@ -97,27 +96,14 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
 
 
   class TestClass5 < BaseTestClass
-  end
-
-  def test_should_generate_method_returning_context
-    given
-      context = Struct.new(:file).new('file')
-      @pr.generate_context_method(TestClass5, context)
-
-    expect
-      TestClass5.send(Preprocessor::CONTEXT_METHOD_NAME).file == 'file'
-  end
-
-
-  class TestClass6 < BaseTestClass
     def test_empty
     end
   end
 
   def test_should_successfully_transform_empty_methods
     given
-      @pr.preprocess_method(TestClass6, :test_empty)
-      tc = TestClass6.new
+      @pr.preprocess_method(TestClass5, :test_empty)
+      tc = TestClass5.new
       tc.test_empty
 
     expect
@@ -125,7 +111,7 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
   end
 
 
-  class TestClass7 < BaseTestClass
+  class TestClass6 < BaseTestClass
     def test_empty
       expect
     end
@@ -133,8 +119,8 @@ class Picard::PreprocessorTest < Test::Unit::TestCase
 
   def test_should_successfully_transform_methods_with_empty_expect_block
     given
-      @pr.preprocess_method(TestClass7, :test_empty)
-      tc = TestClass7.new
+      @pr.preprocess_method(TestClass6, :test_empty)
+      tc = TestClass6.new
       tc.test_empty
 
     expect

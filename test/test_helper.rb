@@ -1,5 +1,5 @@
 require 'test/unit'
-require 'rr'
+require 'flexmock/test_unit'
 
 require_relative '../lib/picard/extensions'
 require_relative '../lib/picard/context'
