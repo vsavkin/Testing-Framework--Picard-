@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    picard (0.0.2)
+    picard (0.0.3)
       live_ast (= 1.0.2)
       live_ast_ripper (= 0.6.5)
 

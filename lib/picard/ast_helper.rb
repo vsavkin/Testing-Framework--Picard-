@@ -23,7 +23,7 @@ module Picard
     end
 
     def wrap_assertion method, ast
-      context = Picard::Context.new(method.source_location, ast.line)
+      context = Picard::Context.new(method.source_location[0], ast.line)
       @wrapper.wrap_assertion ast, context
     end
 
