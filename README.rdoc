@@ -2,10 +2,10 @@
 
 
   require 'picard'
-
+  
   class DemoTest < Test::Unit::TestCase
 	include Picard::TestUnit
-
+  
 	def test_simple_math
   	given
     	x = 1
@@ -22,10 +22,10 @@ To start using picard you need to mix in Picard::TestUnit module into your TestU
   	given
     	x = 1
     	y = 2
-
+  
   	expect
     	assert_equal 3, (x + y), MESSAGE
-	end
+	  end
   end
 
 
@@ -58,7 +58,7 @@ In Spock it's possible to write data driven tests:
  
   expect:
   x + y == z
-
+  
   where:
   x = [1, 10, 100]
   y = [2, 20, 200]
