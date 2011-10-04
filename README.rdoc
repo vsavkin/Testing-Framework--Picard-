@@ -2,18 +2,17 @@
 
 
   require 'picard'
-  
   class DemoTest < Test::Unit::TestCase
-	include Picard::TestUnit
-  
-	def test_simple_math
-  	given
-    	x = 1
-    	y = 2
+	  include Picard::TestUnit
 
-  	expect
-    	x + y == 3
-	end
+	  def test_simple_math
+  	  given
+    	  x = 1
+    	  y = 2
+
+  	  expect
+    	  x + y == 3
+	  end
   end
 
 To start using picard you need to mix in Picard::TestUnit module into your TestUnit test case.  It will add a special hook that will transform every test method in your test case. For instance, the "test_simple_math" method will be transformed into something like:
