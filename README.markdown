@@ -1,31 +1,31 @@
 ## Now, let’s take a look at a test using Picard
 
+    require 'picard'
 
-  require 'picard'
-  class DemoTest < Test::Unit::TestCase
-	  include Picard::TestUnit
+    class DemoTest < Test::Unit::TestCase
+	    include Picard::TestUnit
 
-	  def test_simple_math
-  	  given
-    	  x = 1
-    	  y = 2
+	    def test_simple_math
+  	    given
+    	    x = 1
+    	    y = 2
 
-  	  expect
-    	  x + y == 3
-	  end
-  end
+  	    expect
+    	    x + y == 3
+	    end
+    end
 
 To start using picard you need to mix in Picard::TestUnit module into your TestUnit test case.  It will add a special hook that will transform every test method in your test case. For instance, the "test_simple_math" method will be transformed into something like:
 
-	def test_simple_math
-  	given
-    	x = 1
-    	y = 2
-  
-  	expect
-    	assert_equal 3, (x + y), MESSAGE
-	  end
-  end
+    def test_simple_math
+      given
+        x = 1
+        y = 2
+      
+      expect
+        assert_equal 3, (x + y), MESSAGE
+      end
+    end
 
 
 Where the MESSAGE is:
@@ -44,7 +44,7 @@ You might notice a few things here:
 
 ## What if I want to try?
 
-  gem 'picard'
+    gem 'picard'
 
 
 ## What is coming next?
@@ -55,20 +55,20 @@ There are some things I'm going to add in a week or two:
 2.
 In Spock it's possible to write data driven tests:
  
-  expect:
-  x + y == z
-  
-  where:
-  x = [1, 10, 100]
-  y = [2, 20, 200]
-  z = [3, 30, 300]
+    expect:
+    x + y == z
+    
+    where:
+    x = [1, 10, 100]
+    y = [2, 20, 200]
+    z = [3, 30, 300]
 
 Basically it will transform into something like:
 
-  expect:
-  1 + 2 == 3
-  10 + 20 == 30
-  100 + 200 == 300
+    expect:
+    1 + 2 == 3
+    10 + 20 == 30
+    100 + 200 == 300
 
 Which is totally awesome! I'm going to add a similar feature to Picard soon.
 
