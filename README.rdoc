@@ -1,5 +1,6 @@
 ## Now, let’s take a look at a test using Picard
 
+
   require 'picard'
 
   class DemoTest < Test::Unit::TestCase
