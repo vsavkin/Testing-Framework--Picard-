@@ -1,13 +1,7 @@
 require 'test/unit'
 require 'flexmock/test_unit'
+require 'picard'
+PicardStable = PicardTestFramework::V01
 
-require_relative '../lib/picard/extensions'
-require_relative '../lib/picard/context'
-require_relative '../lib/picard/error_message_formatter'
-require_relative '../lib/picard/ast_helper'
-require_relative '../lib/picard/assertion_wrapper'
-require_relative '../lib/picard/s_expression_sugar'
-require_relative '../lib/picard/class_ripper'
-require_relative '../lib/picard/preprocessor'
-require_relative '../lib/picard/method_ripper'
-require_relative '../lib/picard/test_unit'
+Picard = PicardTestFramework::V02
+require_relative '../lib/picard_02.rb'

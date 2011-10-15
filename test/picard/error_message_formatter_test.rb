@@ -1,7 +1,7 @@
 require File.expand_path("../../test_helper", __FILE__)
 
 class Picard::ErrorMessageFormatterTest < Test::Unit::TestCase
-  include Picard::TestUnit
+  include PicardStable::TestUnit
 
   def test_should_wrap_error_message
     given

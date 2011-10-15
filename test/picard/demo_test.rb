@@ -3,12 +3,13 @@ require 'live_ast'
 
 module Picard
   class DemoTest < Test::Unit::TestCase
-    include Picard::TestUnit
-    #
-    #def test_one
-    #  expect
-    #    1 == 2
-    #end
+    include PicardStable::TestUnit
+    
+    def test_one
+      expect
+        1 == 1
+    end
+    
     #def regular_method
     #  method 1, 2
     #end

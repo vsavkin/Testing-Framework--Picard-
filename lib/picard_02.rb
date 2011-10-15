@@ -1,5 +1,4 @@
-require "picard/version"
-
+require_relative "picard/version"
 require_relative 'picard/extensions'
 require_relative 'picard/context'
 require_relative 'picard/error_message_formatter'

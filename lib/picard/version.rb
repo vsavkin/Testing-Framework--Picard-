@@ -1,7 +1,6 @@
 module PicardTestFramework
-  module V01
-    VERSION = "0.1"
+  module V02
+    VERSION = "0.2"
   end
 end
-
-Picard = PicardTestFramework::V01
+Picard = PicardTestFramework::V02

@@ -1,7 +1,7 @@
 require File.expand_path("../../test_helper", __FILE__)
 
 class Picard::ClassRipperTest < Test::Unit::TestCase
-  include Picard::TestUnit
+  include PicardStable::TestUnit
 
   def setup
     @ripper = Picard::ClassRipper.new

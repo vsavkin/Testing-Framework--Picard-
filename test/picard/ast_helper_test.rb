@@ -1,8 +1,8 @@
 require File.expand_path("../../test_helper", __FILE__)
 
 class Picard::AstHelperTest < Test::Unit::TestCase
-  include Picard::TestUnit
-  include Picard::SExpressionSugar
+  include PicardStable::TestUnit
+  include PicardStable::SExpressionSugar
 
   def setup
     @wrapper = flexmock('wrapper')

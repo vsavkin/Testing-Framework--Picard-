@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "picard/version"
 
 Gem::Specification.new do |s|
-  s.name        = "picard"
+  s.name        = "picard#{Picard::VERSION}"
   s.version     = Picard::VERSION
   s.authors     = ["Victor Savkin"]
   s.email       = ["vic.savkin@gmail.com"]
@@ -21,4 +21,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'live_ast', '= 1.0.2'
   s.add_dependency 'live_ast_ripper', '= 0.6.5'
   s.add_development_dependency 'flexmock'
+  s.add_development_dependency 'picard', '= 0.1'
 end

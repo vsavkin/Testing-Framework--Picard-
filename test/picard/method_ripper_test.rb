@@ -1,7 +1,7 @@
 require File.expand_path("../../test_helper", __FILE__)
 
 class Picard::MethodRipperTest < Test::Unit::TestCase
-  include Picard::TestUnit
+  include PicardStable::TestUnit
   
   class TestClass
     attr_reader :assert_args
