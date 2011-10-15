@@ -1,45 +1,77 @@
-require 'live_ast'
 require 'ruby2ruby'
 
 module Picard
-  class AstHelper
-    ResultItem = Struct.new(:index, :ast)
 
-    def initialize wrapper = Picard::AssertionWrapper.new
+  ResultItem = Struct.new(:ast, :index)
+
+  class AstHelper
+    def initialize(wrapper = Picard::AssertionWrapper.new)
       @wrapper = wrapper
     end
 
-    def all_statements method
-      method_ast = method.to_ast
-      body_statements = extract_body_statements(method_ast)
-      wrap_in_result_items body_statements
-    end
-
-    def all_statements_in_block method, block_name
-      statements = all_statements(method)
-
-      start_index = find_index_of_statements_calling(statements, block_name)
-      start_index ? statements[start_index + 1 .. -1] : []
+    def extract_ast method
+      ast = method.to_sexp do |code|
+        index = code.index('def') + 3
+        code[index...index] = ' fake.'
+        true
+      end
+      MethodAst.new ast
     end
 
     def wrap_assertion method, ast
       context = Picard::Context.new(method.source_location[0], ast.line)
       @wrapper.wrap_assertion ast, context
     end
-
-    def replace_statement method, index, new_statement_ast
-      method_ast = method.to_ast
-      body_statements = extract_statements(method_ast)
-      body_statements[index + 1] = new_statement_ast
+  end
+  
+  class MethodAst
+    def initialize ast
+      @ast = ast
     end
 
-    def method_to_string method
-      ast = method.to_ast
-      str = ast_to_str ast
+    def body_statements
+      st = wrap_into_result_items(all_statements)
+      remove_prefix_statement st
+    end
+
+    def all_statements_in_block block_name
+      statements = body_statements
+      start_index = find_index_of_statements_calling(statements, block_name)
+      start_index ? statements[start_index + 1 .. -1] : []
+    end
+
+    def replace_statement! index, new_statement
+      all_statements[index] = new_statement
+    end
+
+    def generate_method
+      str = ast_to_str(@ast)
       remove_spaces str
     end
 
-    private
+  private
+
+    def wrap_into_result_items statements
+      res = []
+      statements.each_with_index do |s, i|
+        res << ResultItem.new(s, i)
+      end
+      res
+    end
+
+    def remove_prefix_statement statements
+      statements[1..-1]
+    end
+
+    def all_statements
+      @ast[3][1]
+    end
+
+    def find_index_of_statements_calling items, method_name
+      items.index do |item|
+        item.ast[0] == :call and item.ast[2] == method_name
+      end
+    end
 
     def ast_to_str ast
       Ruby2Ruby.new.process ast
@@ -47,34 +79,6 @@ module Picard
 
     def remove_spaces str
       str.gsub(/\n\s+/, "\n")
-    end
-
-    def find_index_of_statements_calling items, method_name
-      items.index do |item|
-        ast = item.ast
-        ast[0] == :call and ast[2] == method_name
-      end
-    end
-
-    def extract_body_statements method_ast
-      st = extract_statements(method_ast)
-      remove_prefix_statement st
-    end
-
-    def remove_prefix_statement statements
-      statements[1..-1]
-    end
-
-    def extract_statements method_ast
-      method_ast[3][1]
-    end
-
-    def wrap_in_result_items asts
-      res = []
-      asts.each_with_index do |e, i|
-        res << ResultItem.new(i, e)
-      end
-      res
     end
   end
 end

@@ -18,8 +18,8 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_dependency 'live_ast', '= 1.0.2'
-  s.add_dependency 'live_ast_ripper', '= 0.6.5'
+  s.add_dependency 'sourcify', '>= 0.6.0.rc1'
   s.add_development_dependency 'flexmock'
   s.add_development_dependency 'picard', '= 0.1'
+  s.add_development_dependency 'test-unit'
 end

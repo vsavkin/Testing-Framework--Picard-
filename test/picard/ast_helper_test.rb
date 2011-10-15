@@ -4,34 +4,41 @@ class Picard::AstHelperTest < Test::Unit::TestCase
   include PicardStable::TestUnit
   include PicardStable::SExpressionSugar
 
-  def setup
-    @wrapper = flexmock('wrapper')
-    @helper = Picard::AstHelper.new @wrapper
+  class TestClass1
+    def test_method
+    end
+  end
+
+  def test_ast_helper_should_add_nil_to_empty_method
+    given
+      ast = ast_of(TestClass1)
+
+    expect
+      ast.body_statements[0].ast == s(:nil)
   end
 
 
-  class TestClass1
+  class TestClass2
     def test_method
       one
       two
     end
   end
 
-  def test_should_return_all_statements_of_method
+  def test_ast_helper_should_extract_ast_including_body_statments
     given
-      method = TestClass1.instance_method(:test_method)
-      actual = @helper.all_statements(method)
+      statements = ast_of(TestClass2).body_statements
 
     expect
-      actual[0].index == 0
-      actual[0].ast == s(:call, nil, :one, s(:arglist))
+      statements[0].index == 1
+      statements[0].ast == s(:call, nil, :one, s(:arglist))
 
-      actual[1].index == 1
-      actual[1].ast == s(:call, nil, :two, s(:arglist))
+      statements[1].index == 2
+      statements[1].ast == s(:call, nil, :two, s(:arglist))
   end
 
 
-  class TestClass2
+  class TestClass3
     def test_method
       one
       expect
@@ -39,79 +46,82 @@ class Picard::AstHelperTest < Test::Unit::TestCase
     end
   end
 
-  def test_should_find_all_statements_in_specified_block
+  def test_method_ast_should_return_all_statements_in_block
     given
-      method = TestClass2.instance_method(:test_method)
-      actual = @helper.all_statements_in_block(method, :expect)
+      statements = ast_of(TestClass3).all_statements_in_block(:expect)
 
     expect
-      actual.size == 1
-      actual[0].index == 2
-      actual[0].ast == s(:call, nil, :two, s(:arglist))
+      statements[0].index == 3
+      statements[0].ast = s(:call, nil, :two, s(:arglist))
   end
 
 
-  class TestClass3
+  class TestClass4
     def test_method
       one
       two
     end
   end
 
-  def test_should_return_empty_array_if_block_is_not_found
+  def test_method_ast_should_return_empty_array_if_block_is_not_found
     given
-      method = TestClass3.instance_method(:test_method)
+      statements = ast_of(TestClass4)
 
     expect
-      @helper.all_statements_in_block(method, :where) == []
+      statements.all_statements_in_block(:where) == []
   end
 
 
-  class TestClass4
+  class TestClass5
     def test_method
       false
     end
   end
 
-  def test_should_replace_statement
+  def test_method_ast_should_replace_statement
     given
-      method = TestClass4.instance_method(:test_method)
-      @helper.replace_statement(method, 0, s(:lit, true))
-      all_statements = @helper.all_statements(method)
+      ast = ast_of(TestClass5)
+      ast.replace_statement!(1, s(:true))
 
     expect
-      all_statements[0].ast == s(:lit, true)
+      ast.body_statements[0].ast == s(:true)
   end
 
 
-  class TestClass5
-    def method
-    end
-  end
-
-  def test_should_wrap_assertion
-    given
-      method = TestClass5.instance_method(:method)
-      ast = s(:lit, true)
-      @wrapper.should_receive(:wrap_assertion).and_return('wrapped ast')
-
-    expect
-      @helper.wrap_assertion(method, ast) == 'wrapped ast'
-  end
-
-
-  class TestClass5
-    def method
+  class TestClass6
+    def test_method
       false
     end
   end
 
-  def test_should_return_string_representation_of_a_method_reflecting_updated_ast
+  def test_method_ast_should_generate_method_as_string
     given
-      method = TestClass5.instance_method(:method)
-      @helper.replace_statement(method, 0, s(:lit, true))
+      ast = ast_of(TestClass5)
 
     expect
-      @helper.method_to_string(method) == "def method\ntrue\nend"
+      ast.generate_method == "def test_method\nfalse\nend"
+  end
+
+
+  def test_ast_helper_should_wrap_assertion
+    given
+      ast = flexmock(:line => 100)
+      method = flexmock(:source_location => ['location'])
+      expected_context = Picard::Context.new('location', 100)
+    
+      wrapper = flexmock('wrapper')
+      wrapper.should_receive(:wrap_assertion).with(ast, expected_context).and_return('wrapped ast')
+
+      helper = Picard::AstHelper.new(wrapper)
+    
+    expect
+      helper.wrap_assertion(method, ast) == 'wrapped ast'
+  end
+
+  private
+
+  def ast_of(clazz)
+    method = clazz.instance_method(:test_method)
+    Picard::AstHelper.new.extract_ast(method)
   end
 end

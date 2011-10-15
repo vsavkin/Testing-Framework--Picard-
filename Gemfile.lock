@@ -2,12 +2,13 @@ PATH
   remote: .
   specs:
     picard0.2 (0.2)
-      live_ast (= 1.0.2)
-      live_ast_ripper (= 0.6.5)
+      sourcify (>= 0.6.0.rc1)
 
 GEM
   remote: http://rubygems.org/
   specs:
+    file-tail (1.0.7)
+      tins (~> 0.3)
     flexmock (0.9.0)
     live_ast (1.0.2)
       live_ast_ruby_parser (>= 0.6.0)
@@ -25,6 +26,13 @@ GEM
     ruby_parser (2.0.6)
       sexp_processor (~> 3.0)
     sexp_processor (3.0.7)
+    sourcify (0.6.0.rc1)
+      file-tail (>= 1.0.5)
+      ruby2ruby (>= 1.2.5)
+      ruby_parser (>= 2.0.5)
+      sexp_processor (>= 3.0.5)
+    test-unit (2.4.0)
+    tins (0.3.1)
 
 PLATFORMS
   ruby
@@ -34,3 +42,4 @@ DEPENDENCIES
   picard (= 0.1)
   picard0.2!
   rake
+  test-unit
