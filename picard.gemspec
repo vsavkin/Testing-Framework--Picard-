@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "picard/version"
 
 Gem::Specification.new do |s|
-  s.name        = "picard#{Picard::VERSION}"
+  s.name        = "picard"
   s.version     = Picard::VERSION
   s.authors     = ["Victor Savkin"]
   s.email       = ["vic.savkin@gmail.com"]
