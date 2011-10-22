@@ -1,5 +1,3 @@
-require 'live_ast'
-
 module Picard
   class MethodRipper
     def initialize ast_helper = AstHelper.new

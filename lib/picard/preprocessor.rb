@@ -1,5 +1,3 @@
-require 'live_ast'
-require 'live_ast/to_ruby'
 require 'ruby2ruby'
 
 module Picard

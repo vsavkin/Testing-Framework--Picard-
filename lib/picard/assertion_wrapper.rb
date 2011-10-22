@@ -1,4 +1,3 @@
-require 'live_ast'
 require 'ruby2ruby'
 require_relative 's_expression_sugar'
 
